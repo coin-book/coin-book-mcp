@@ -86,6 +86,19 @@ type Account struct {
 	TransactionCount int     `json:"transaction_count"`
 	LastBookedOn     *string `json:"last_booked_on"`
 	Archived         bool    `json:"archived"`
+	BankID           *string `json:"bank_id"`
+}
+
+type Bank struct {
+	ID        string `json:"id"`
+	ShortName string `json:"short_name"`
+}
+
+func (c *Client) Banks(ctx context.Context) ([]Bank, error) {
+	var out struct {
+		Banks []Bank `json:"banks"`
+	}
+	return out.Banks, c.get(ctx, "/banks", nil, &out)
 }
 
 func (c *Client) Accounts(ctx context.Context) ([]Account, error) {
@@ -127,6 +140,13 @@ type Transaction struct {
 	Categories    []Assignment `json:"categories"`
 	Transfer      *struct{}    `json:"transfer"`
 	OperationType *string      `json:"operation_type"`
+	Suggestions   []Suggestion `json:"suggestions"`
+}
+
+type Suggestion struct {
+	CategoryID string   `json:"category_id"`
+	Confidence float64  `json:"confidence"`
+	Reasons    []string `json:"reasons"`
 }
 
 type TransactionFilter struct {

@@ -28,7 +28,7 @@ and every request it makes is recorded in coin-book's audit log. Nothing here ca
 | `find_transactions` | transactions:read, categories:read | transactions by date, category, account or text |
 | `get_transaction` | transactions:read, categories:read | one transaction in detail |
 | `list_uncategorized` | transactions:read, categories:read | transactions waiting for a category |
-| `list_accounts` | accounts:read | accounts and balances |
+| `list_accounts` | accounts:read | accounts, their banks and balances |
 | `list_categories` | categories:read | the category taxonomy |
 
 ## Develop

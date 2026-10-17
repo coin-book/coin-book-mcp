@@ -46,15 +46,22 @@ type findIn struct {
 }
 
 type transactionView struct {
-	ID           string   `json:"id"`
-	Date         string   `json:"date"`
-	Amount       money    `json:"amount"`
-	Counterparty string   `json:"counterparty,omitempty"`
-	Description  string   `json:"description"`
-	Message      string   `json:"message,omitempty"`
-	Account      string   `json:"account,omitempty"`
-	Categories   []string `json:"categories"`
-	Transfer     bool     `json:"transfer" jsonschema:"a move between the user's own accounts"`
+	ID           string         `json:"id"`
+	Date         string         `json:"date"`
+	Amount       money          `json:"amount"`
+	Counterparty string         `json:"counterparty,omitempty"`
+	Description  string         `json:"description"`
+	Message      string         `json:"message,omitempty"`
+	Account      string         `json:"account,omitempty"`
+	Categories   []string       `json:"categories"`
+	Transfer     bool           `json:"transfer" jsonschema:"a move between the user's own accounts"`
+	Suggested    *suggestedView `json:"suggested_category,omitempty" jsonschema:"the learned guess for an uncategorised transaction"`
+}
+
+type suggestedView struct {
+	Category   string   `json:"category"`
+	Confidence float64  `json:"confidence" jsonschema:"0–1; below about 0.5 treat it as a hint"`
+	Because    []string `json:"because" jsonschema:"words of the transaction that point at this category"`
 }
 
 type transactionList struct {
@@ -137,6 +144,10 @@ func viewOf(tx coinbook.Transaction, l *lookup) transactionView {
 	}
 	for _, a := range tx.Categories {
 		v.Categories = append(v.Categories, l.categoryName(a.CategoryID))
+	}
+	if len(tx.Suggestions) > 0 {
+		s := tx.Suggestions[0]
+		v.Suggested = &suggestedView{Category: l.categoryName(s.CategoryID), Confidence: s.Confidence, Because: s.Reasons}
 	}
 	return v
 }
