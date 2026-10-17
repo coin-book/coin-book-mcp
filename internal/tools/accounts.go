@@ -25,7 +25,8 @@ type noInput struct{}
 type accountView struct {
 	ID           string  `json:"id"`
 	Name         string  `json:"name"`
-	Bank         string  `json:"bank"`
+	Institution  string  `json:"importer" jsonschema:"which statement parser feeds the account"`
+	Bank         string  `json:"bank,omitempty" jsonschema:"the bank, from the register of Czech and Slovak bank codes and fintechs"`
 	Kind         string  `json:"kind"`
 	Balance      money   `json:"balance"`
 	LastActivity *string `json:"last_activity,omitempty" jsonschema:"date of the newest imported transaction"`
@@ -40,12 +41,24 @@ func (t *server) listAccounts(ctx context.Context, _ *mcp.CallToolRequest, _ noI
 	if err != nil {
 		return nil, nil, err
 	}
+	banks, err := t.api.Banks(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+	bankNames := map[string]string{}
+	for _, b := range banks {
+		bankNames[b.ID] = b.ShortName
+	}
 	out := &accountList{Accounts: []accountView{}}
 	for _, a := range accounts {
 		if a.Archived {
 			continue
 		}
-		out.Accounts = append(out.Accounts, accountView{ID: a.ID, Name: a.Name, Bank: a.Institution, Kind: a.Kind,
+		bankName := ""
+		if a.BankID != nil {
+			bankName = bankNames[*a.BankID]
+		}
+		out.Accounts = append(out.Accounts, accountView{ID: a.ID, Name: a.Name, Institution: a.Institution, Bank: bankName, Kind: a.Kind,
 			Balance: moneyOf(a.Balance.Minor, a.Balance.Currency), LastActivity: a.LastBookedOn})
 	}
 	return nil, out, nil
