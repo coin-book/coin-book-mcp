@@ -1,5 +1,11 @@
 # coin-book-mcp
 
+[![ci](https://github.com/coin-book/coin-book-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/coin-book/coin-book-mcp/actions/workflows/ci.yml)
+[![release](https://github.com/coin-book/coin-book-mcp/actions/workflows/release.yml/badge.svg)](https://github.com/coin-book/coin-book-mcp/actions/workflows/release.yml)
+![Go](https://img.shields.io/badge/go-1.27-00ADD8?logo=go&logoColor=white)
+![MCP](https://img.shields.io/badge/MCP-stdio-000000?logo=anthropic&logoColor=white)
+![read-only](https://img.shields.io/badge/access-read--only-2ea44f)
+
 Read-only MCP server that lets an AI agent (Claude Code, Claude Desktop, a voice assistant) answer
 questions about your coin-book finances: "kolik ještě můžu tento měsíc utratit?", "kolik jsem dal za
 jídlo venku v září?".
