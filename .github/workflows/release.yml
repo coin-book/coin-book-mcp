@@ -1,29 +1,39 @@
 name: release
 
+# release-please keeps a release PR open; merging it tags vX.Y.Z (ADR 210). A tag pushed with
+# GITHUB_TOKEN starts no other workflow, so GoReleaser runs here, after the release step.
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Semantic version without the v, e.g. 0.2.0
-        required: true
-
-permissions:
-  contents: write
+  push:
+    branches: [main]
 
 jobs:
-  release:
+  release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      created: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@v4
+
+  goreleaser:
+    needs: release-please
+    if: needs.release-please.outputs.created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
         with:
+          ref: ${{ needs.release-please.outputs.tag }}
           fetch-depth: 0
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
       - run: make test lint
-      - run: |
-          git tag "v${{ inputs.version }}"
-          git push origin "v${{ inputs.version }}"
       - uses: goreleaser/goreleaser-action@v6
         with:
           version: "~> v2"
