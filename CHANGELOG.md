@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/coin-book/coin-book-mcp/compare/v1.0.0...v1.1.0) (2026-10-20)
+
+
+### Features
+
+* **mcp:** net worth, loan and P2P loan tools ([f5073d2](https://github.com/coin-book/coin-book-mcp/commit/f5073d26d6a8199ecb1dcb3ce4f2f11c3ac1249f))
+
 ## 1.0.0 (2026-10-18)
 
 
