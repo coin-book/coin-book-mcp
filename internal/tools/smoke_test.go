@@ -35,4 +35,7 @@ func TestSmokeAgainstRunningAPI(t *testing.T) {
 	if _, _, err := s.monthlySummary(ctx, nil, monthIn{}); err != nil {
 		t.Fatalf("get_monthly_summary: %v", err)
 	}
+	if _, _, err := s.getNetWorth(ctx, nil, netWorthIn{}); err != nil {
+		t.Fatalf("get_net_worth: %v", err)
+	}
 }

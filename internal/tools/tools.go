@@ -28,6 +28,7 @@ func Register(s *mcp.Server, api *coinbook.Client) {
 	t.registerAccounts(s)
 	t.registerTransactions(s)
 	t.registerBudgets(s)
+	t.registerWealth(s)
 }
 
 func readOnly() *mcp.ToolAnnotations {
@@ -69,6 +70,8 @@ func currencyOr(c string) string {
 type lookup struct {
 	categories map[string]coinbook.Category
 	accounts   map[string]coinbook.Account
+	// noAccountScope: the token cannot read accounts, so accounts is empty for that reason.
+	noAccountScope bool
 }
 
 func (t *server) lookup(ctx context.Context, needAccounts bool) (*lookup, error) {
@@ -85,6 +88,7 @@ func (t *server) lookup(ctx context.Context, needAccounts bool) (*lookup, error)
 		var apiErr *coinbook.Error
 		if errors.As(err, &apiErr) && apiErr.Code == "insufficient_scope" {
 			// Account names are a nicety; a token without accounts:read still reads transactions.
+			l.noAccountScope = true
 			return l, nil
 		}
 		if err != nil {

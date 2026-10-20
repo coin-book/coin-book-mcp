@@ -36,6 +36,9 @@ and every request it makes is recorded in coin-book's audit log. Nothing here ca
 | `list_uncategorized` | transactions:read, categories:read | transactions waiting for a category |
 | `list_accounts` | accounts:read | accounts, their banks and balances |
 | `list_categories` | categories:read | the category taxonomy |
+| `get_net_worth` | reports:read, accounts:read, categories:read | net worth by class and account, liquidity, reserve, monthly history |
+| `get_loan` | accounts:read, categories:read | a mortgage's balance, rate, fixation, next instalment, interest per year |
+| `get_p2p_loans` | accounts:read, categories:read | a P2P platform's outstanding principal, loans at risk, earnings, maturities |
 
 ## Develop
 
